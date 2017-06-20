@@ -20,21 +20,69 @@ var app = express.Router();
 
 
 
-app.post('/auth/setup', function(req, res) {
-var regUser;
-var newGroup;
+function setupUser(req,res) {
+  var regUser;
+  var newGroup;
 
+console.log('hit1');
+  // the user is new
+  // create a new user
+  regUser = new User({
+    username: req.body.username,
+    password: req.body.password,
+    group:  req.body.group,
+    groupCode:  req.body.groupCode
+  });
+
+  // save the sample user
+  regUser.save(function(err) {
+    if (err) throw err;
+    console.log('User saved successfully');
+  });
+
+  //sets up group document the first time
+  newGroup = new Group({
+    title: req.body.group,
+    keyValue: [{}]
+  })
+  newGroup.save(function(err) {
+    if (err) throw err;
+    console.log('User saved successfully');
+  });
+  return res.status(200).send({
+      success: true,
+      message: 'New user created'
+  });
+}
+
+
+app.post('/auth/setup', function(req, res) {
+
+//if username used
+//if groupcode different
 
 User.find({group : req.body.group}, function(err,user){
   if (err) throw err;
+  //if there are some users in that group
   if (Object.keys(user).length !== 0){
-        //if the account already exists
+
         if (user[0].groupCode === req.body.groupCode){
           console.log("The group codes match");
-          return res.status(200).send({
-              success: false,
-              message: 'Codes are same, user is made already'
-          });
+          var match = false;
+          for (i=0;i<user.length;i++) {
+            if (user[i].username === req.body.username){
+              match = true;
+              return res.status(200).send({
+                  success: false,
+                  message: 'Username already in use'
+              });
+              break;
+            }
+          }
+          if (!match) {
+            setupUser(req,res);
+          }
+
         }
         else {
           console.log("The group codes are different");
@@ -45,39 +93,9 @@ User.find({group : req.body.group}, function(err,user){
         }
   }
   else {
-    // the user is new
-    // create a new user
-    regUser = new User({
-      username: req.body.username,
-      password: req.body.password,
-      group:  req.body.group,
-      groupCode:  req.body.groupCode
-    });
-
-    // save the sample user
-    regUser.save(function(err) {
-      if (err) throw err;
-      console.log('User saved successfully');
-    });
-
-    //sets up group document the first time
-    newGroup = new Group({
-      title: req.body.group,
-      keyValue: [{}]
-    })
-    newGroup.save(function(err) {
-      if (err) throw err;
-      console.log('User saved successfully');
-    });
-    return res.status(200).send({
-        success: true,
-        message: 'New user created'
-    });
+    setupUser(req,res);
   }
-
 });
-
-// testGrp.keyValue.push({target:'target2',value:21})
 
 });
 

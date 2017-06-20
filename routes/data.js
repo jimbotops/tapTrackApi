@@ -12,13 +12,26 @@ var app = express.Router();
 //TODO:update swagger for get and post
 
 app.post('/', function(req, res) {
-  //TODO: add logic to check if already there and if so replace value
+  found = false;
   Group.findOne({title : req.decoded._doc.group}, function(err,group){
-    group.keyValue.push({target: req.body.tar, value: req.body.val})
-    group.save();
-    res.status(200).send({
-      created: true
-    });
+    for (i=0; i<group.keyValue.length;i++){
+      if (group.keyValue[i].target == req.body.tar){
+        found = true;
+         group.keyValue[i].value = req.body.val;
+         group.save();
+         res.status(200).send({
+           updated : true
+         });
+         break;
+      }
+    }
+    if (!found){
+      group.keyValue.push({target: req.body.tar, value: req.body.val})
+      group.save();
+      res.status(200).send({
+        created: true
+      });
+    }
   });
 });
 
