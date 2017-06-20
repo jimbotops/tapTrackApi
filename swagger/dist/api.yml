@@ -1,0 +1,132 @@
+swagger: "2.0"
+info:
+  description: "TapTrack API Documentation"
+  version: "1.0.0"
+  title: "TapTrack API"
+host: "localhost:3000"
+basePath: "/api"
+tags:
+  - name: "authenticate"
+  - name: "setup"
+schemes:
+- "http"
+paths:
+  /auth/setup:
+    post:
+      tags:
+      - "setup"
+      summary: "Create new user"
+      description: ""
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "formData"
+        name: "username"
+        description: "Pre-existing username"
+        required: true
+        schema: string
+      - in: "formData"
+        name: "password"
+        description: "Pre-existing password"
+        required: true
+        schema: string
+      - in: "formData"
+        name: "group"
+        description: "Group Name"
+        required: true
+        schema: string
+      - in: "formData"
+        name: "groupCode"
+        description: "Unique group code, new if new group or matching if existing group"
+        required: true
+        schema: string
+      responses:
+        200:
+          description: "All good"
+        500:
+          description: "Server Fault"
+        403:
+          description: "Not authorised"
+  /auth/authenticate:
+    post:
+      tags:
+      - "authenticate"
+      summary: "Generate a JWT from username and password"
+      description: ""
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "formData"
+        name: "username"
+        description: "Pre-existing username"
+        required: true
+        schema: string
+      - in: "formData"
+        name: "password"
+        description: "Pre-existing password"
+        required: true
+        schema: string
+      responses:
+        200:
+          description: "All OK"
+        500:
+          description: "Server Fault"
+        403:
+          description: "Not authorised"
+  /data:
+    get:
+      tags:
+      - "data"
+      summary: "Get a value"
+      description: ""
+      parameters:
+      - name: x-access-token
+        in: header
+        description: an authorization header
+        required: true
+        type: string
+      - name: tar
+        in: query
+        description: an authorization header
+        required: true
+        type: string
+      responses:
+        200:
+          description: "All good"
+        500:
+          description: "Server Fault"
+        403:
+          description: "Not authorised"
+    /data:
+    post:
+      tags:
+      - "data"
+      summary: "Set a value"
+      description: ""
+      parameters:
+      - name: x-access-token
+        in: header
+        description: an authorization header
+        required: true
+        type: string
+      - name: tar
+        in: "formData"
+        description: Target to update
+        required: true
+        type: string
+      - name: val
+        in: "formData"
+        description: Value to set
+        required: true
+        type: number
+      responses:
+        200:
+          description: "All good"
+        500:
+          description: "Server Fault"
+        403:
+          description: "Not authorised"
