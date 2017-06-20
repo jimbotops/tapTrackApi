@@ -8,8 +8,9 @@ var app         = express();
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
+var jwt         = require('jsonwebtoken');
+var bcrypt      = require('bcrypt');
 
-var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config'); // get our config file
 var User   = require('../app/models/user'); // get our mongoose model
 var jwtSecret = require('../private/jwtSecret.json');
@@ -23,17 +24,15 @@ var app = express.Router();
 function setupUser(req,res) {
   var regUser;
   var newGroup;
-
-console.log('hit1');
+//TODO: Consider async bcrypt
   // the user is new
   // create a new user
-  regUser = new User({
-    username: req.body.username,
-    password: req.body.password,
-    group:  req.body.group,
-    groupCode:  req.body.groupCode
-  });
-
+    regUser = new User({
+      username: req.body.username,
+      password:  bcrypt.hashSync(req.body.password, 10),
+      group:  req.body.group,
+      groupCode:  req.body.groupCode
+    });
   // save the sample user
   regUser.save(function(err) {
     if (err) throw err;
@@ -115,7 +114,7 @@ app.post('/auth/authenticate', function(req, res) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
       // check if password matches
-      if (user.password != req.body.password) {
+      if (!bcrypt.compareSync(req.body.password,user.password)) {
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
         // if user is found and password is right
@@ -172,12 +171,9 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-  // console.log(JSON.stringify(req.decoded, null, 4));
-  res.json({ message: 'Welcome to the coolest API on earth!'});
+  res.json({ message: 'Valid token'});
 });
 
-
-// should have a /data route with post to set and get to fetch
 app.use('/data', dataRoutes);
 
 module.exports = app;
