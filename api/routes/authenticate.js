@@ -113,7 +113,7 @@ app.post('/auth/authenticate', function(req, res) {
     if (err) throw err;
 
     if (!user) {
-      res.json({id: 102 success: false, message: 'Authentication failed. User not found.' });
+      res.json({id: 102, success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
       // check if password matches
       if (!bcrypt.compareSync(req.body.password,user.password)) {
