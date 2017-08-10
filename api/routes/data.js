@@ -20,6 +20,7 @@ app.post('/', function(req, res) {
          group.keyValue[i].value = req.body.val;
          group.save();
          res.status(200).send({
+           id: 109,
            updated : true
          });
          break;
@@ -29,6 +30,7 @@ app.post('/', function(req, res) {
       group.keyValue.push({target: req.body.tar, value: req.body.val})
       group.save();
       res.status(200).send({
+        id: 110,
         created: true
       });
     }
@@ -42,6 +44,7 @@ app.get('/', function(req, res) {
       if (group.keyValue[i].target == req.query.tar){
          found = true;
          res.status(200).send({
+           id: 111,
            cVal: group.keyValue[i].value
          });
          break;
@@ -49,6 +52,7 @@ app.get('/', function(req, res) {
     }
     if (!found){
       res.status(200).send({
+        id: 113,
         found: false
       });
     }

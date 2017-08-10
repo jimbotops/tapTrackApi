@@ -72,6 +72,7 @@ User.find({group : req.body.group}, function(err,user){
             if (user[i].username === req.body.username){
               match = true;
               return res.status(200).send({
+                  id: 103,
                   success: false,
                   message: 'Username already in use'
               });
@@ -86,6 +87,7 @@ User.find({group : req.body.group}, function(err,user){
         else {
           console.log("The group codes are different");
           return res.status(200).send({
+              id: 104,
               success: false,
               message: 'Codes are different'
           });
@@ -111,11 +113,11 @@ app.post('/auth/authenticate', function(req, res) {
     if (err) throw err;
 
     if (!user) {
-      res.json({ success: false, message: 'Authentication failed. User not found.' });
+      res.json({id: 102 success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
       // check if password matches
       if (!bcrypt.compareSync(req.body.password,user.password)) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+        res.json({id: 101, success: false, message: 'Authentication failed. Wrong password.' });
       } else {
         // if user is found and password is right
         // create a token
@@ -125,6 +127,7 @@ app.post('/auth/authenticate', function(req, res) {
 
         // return the information including token as JSON
         res.status(200).json({
+          id: 100,
           success: true,
           message: 'Enjoy your token!',
           token: token
@@ -146,7 +149,7 @@ app.use(function(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, jwtSecret.secret, function(err, decoded) {
       if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });
+        return res.json({ id: 105, success: false, message: 'Failed to authenticate token.' });
       } else {
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
@@ -159,6 +162,7 @@ app.use(function(req, res, next) {
     // if there is no token
     // return an error
     return res.status(403).send({
+        id: 106,
         success: false,
         message: 'No token provided.'
     });
@@ -171,7 +175,7 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-  res.json({ message: 'Valid token'});
+  res.json({ id: 108, message: 'Valid token'});
 });
 
 app.use('/data', dataRoutes);
