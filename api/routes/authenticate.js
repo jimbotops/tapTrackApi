@@ -11,7 +11,7 @@ var mongoose    = require('mongoose');
 var jwt         = require('jsonwebtoken');
 var bcrypt      = require('bcrypt');
 
-var config = require('../config'); // get our config file
+//var config = require('../config'); // get our config file
 var User   = require('../app/models/user'); // get our mongoose model
 var jwtSecret = require('../private/jwtSecret.json');
 var dataRoutes = require('./data');
