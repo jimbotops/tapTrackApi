@@ -59,4 +59,17 @@ app.get('/', function(req, res) {
   });
 });
 
+app.get('/init', function(req, res) {
+  Group.findOne({title : req.decoded._doc.group}, function(err,group){
+    allData ={};
+    for (i=0; i<group.keyValue.length;i++) {
+      allData[group.keyValue[i].target] = group.keyValue[i].value;
+    }
+    res.status(200).send({
+      id: 114,
+      data: allData
+    });
+  });
+});
+
 module.exports = app;
