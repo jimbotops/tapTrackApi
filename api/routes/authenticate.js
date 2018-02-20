@@ -49,6 +49,7 @@ function setupUser(req,res) {
     console.log('User saved successfully');
   });
   return res.status(200).send({
+      id: 107,
       success: true,
       message: 'New user created'
   });
