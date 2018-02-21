@@ -13,7 +13,7 @@ var User   = require('./app/models/user'); // get our mongoose model
 var Group   = require('./app/models/group'); // get our mongoose model
 
 var authRoutes = require('./routes/authenticate');
-var versionRoutes = require('./routes/version');
+var versionRoute = require('./routes/version');
 var mongoAuth = require('./private/mongoAuth.json');
 
 var app = express();
