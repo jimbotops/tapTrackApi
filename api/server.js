@@ -13,6 +13,7 @@ var User   = require('./app/models/user'); // get our mongoose model
 var Group   = require('./app/models/group'); // get our mongoose model
 
 var authRoutes = require('./routes/authenticate');
+var versionRoutes = require('./routes/version');
 var mongoAuth = require('./private/mongoAuth.json');
 
 var app = express();
@@ -31,7 +32,7 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-
+app.use('/version', versionRoute);
 app.use('/api', authRoutes);
 
 
