@@ -123,7 +123,7 @@ app.post('/auth/authenticate', function(req, res) {
         // if user is found and password is right
         // create a token
         var token = jwt.sign(user , jwtSecret.secret, {
-          expiresIn: 1440 // expires in 24 hours
+          expiresIn: 90d
         });
 
         // return the information including token as JSON
